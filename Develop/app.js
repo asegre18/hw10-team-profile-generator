@@ -10,6 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// create render methods for each employee type to call once info gathered by employee
 function renderEmployee(teamList) {
     let data = render(teamList);
     return fs.writeFile(outputPath, data, err => {
