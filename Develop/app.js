@@ -10,6 +10,97 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+function renderEmployee(teamList) {
+    let data = render(teamList);
+    return fs.writeFile(outputPath, data, err => {
+        console.log(err);
+    })
+};
+
+function promptQuestions() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is your name?",
+        name: "name"
+      },
+      {
+        type: "number",
+        message: "What is your ID number?",
+        name: "id"
+      },
+      {
+        type: "input",
+        message: "What is your email address?",
+        name: "email"
+      },
+      {
+        type: "list",
+        message: "What is your role at the company?",
+        name: "role",
+        choices: ["Engineer", "Intern", "Manager"]
+      },
+    ])
+    .then(function ({ name, id, email, role }) {
+      switch (role) {
+        case "Engineer":
+          inquirer
+            .prompt({
+              type: "input",
+              message: "What is your GitHub username?",
+              name: "github"
+            })
+            .then(function ({ github }) {
+              generateEngineer(name, id, email, github);
+              addTeamMember();
+            });
+          break;
+        case "Intern":
+          inquirer
+            .prompt({
+              type: "input",
+              message: "What school are you enrolled at?",
+              name: "school"
+            })
+            .then(function ({ school }) {
+              generateIntern(name, id, email, school);
+              addTeamMember();
+            });
+          break;
+        case "Manager":
+          inquirer
+            .prompt({
+              type: "input",
+              message: "What is your Office Number?",
+              name: "officeNumber"
+            })
+            .then(function ({ officeNumber }) {
+              generateManager(name, id, email, officeNumber);
+              addTeamMember();
+            });
+          break;
+      }
+    });
+}
+function addTeamMember() {
+  inquirer.prompt({
+    type: "confirm",
+    message: "Do you want to add another employee to your team?",
+    name: "addTeamMember"
+  }).then(function ({ addTeamMember }) {
+    console.log("New team member added: ", addTeamMember);
+    if (addTeamMembers) {
+        promptQuestions();
+    } else {
+        renderEmployee();
+    }
+  }).catch(err => {
+      console.log("Error adding new team member", err);
+      throw err;
+  })
+}
+promptQuestions();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
