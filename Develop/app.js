@@ -95,10 +95,10 @@ function addTeamMember() {
     name: "addTeamMember"
   }).then(function ({ addTeamMember }) {
     console.log("New team member added: ", addTeamMember);
-    if (addTeamMembers) {
+    if (addTeamMember) {
         promptQuestions();
     } else {
-        renderEmployee(teamList[id - 1]);
+        renderEmployee();
     }
   }).catch(err => {
       console.log("Error adding new team member", err);
