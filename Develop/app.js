@@ -10,6 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let teamList = [];
+
 // create render methods for each employee type to call once info gathered by employee
 function renderEmployee(teamList) {
     let data = render(teamList);
@@ -17,6 +19,7 @@ function renderEmployee(teamList) {
         console.log(err);
     })
 };
+// rendering to page still not functioning properly!!!!
 
 function promptQuestions() {
   inquirer
@@ -84,6 +87,7 @@ function promptQuestions() {
       }
     });
 }
+
 function addTeamMember() {
   inquirer.prompt({
     type: "confirm",
@@ -94,13 +98,32 @@ function addTeamMember() {
     if (addTeamMembers) {
         promptQuestions();
     } else {
-        renderEmployee();
+        renderEmployee(teamList[id - 1]);
     }
   }).catch(err => {
       console.log("Error adding new team member", err);
       throw err;
   })
 }
+
+function generateEngineer(name, id, email, officeNumber) {
+  const engineer = new Engineer(name, id, email, officeNumber);
+  teamList.push(engineer);
+  return engineer;
+}
+
+function generateIntern(name, id, email, school) {
+  const intern = new Intern(name, id, email, school);
+  teamList.push(intern);
+  return intern;
+}
+
+function generateManager(name, id, email, school) {
+  const manager = new Manager(name, id, email, school);
+  teamList.push(manager);
+  return manager;
+}
+
 promptQuestions();
 
 // Write code to use inquirer to gather information about the development team members,
